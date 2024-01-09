@@ -11,20 +11,27 @@
   },
   "Authentication": {
     "Enabled": true,
-    "WebBrowserAuthEnabled": false,
+    "WebBrowserAuthEnabled": true,
     "PwdType": "Sha256",
     "Users": [
       {
-        "Name": "JohnDoe",
+        "Name": "JohnDoe_Plaintext",
         "Pwd": "123456",
         "MaxFingerprints": 1,
-        "MessageOfTheDay": "Hello JohnDoe!",
+        "MessageOfTheDay": "Hello JohnDoe_Plaintext!",
         "CustomIndexPath": null
+      },
+      {
+        "Name": "JohnDoe_Sha256",
+        "Pwd": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+        "MaxFingerprints": 1,
+        "MessageOfTheDay": "Hello JohnDoe_Sha256!",
+        "CustomIndexPath": null        
       }
     ]
   },
   "FingerprintsFilter": {
-    "Enabled": true,
+    "Enabled": false,
     "FingerprintsFilePath": "fingerprints.json",
     "MaxFingerprints": 1
   },

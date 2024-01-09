@@ -28,9 +28,9 @@ public class BlacklistMiddleware : IBlacklistMiddleware
         if (e.PropertyName == nameof(IBlacklistSettings.IsBehindProxy))
         {
             if (_blacklistSettings.IsBehindProxy)
-                _logger.LogInformation("Server marked as being behind proxy.");
+                _logger.LogInformation("Server marked as being behind proxy");
             else
-                _logger.LogInformation("Server not marked as being behind proxy.");
+                _logger.LogInformation("Server not marked as being behind proxy");
         }
     }
 
@@ -39,19 +39,19 @@ public class BlacklistMiddleware : IBlacklistMiddleware
         var remoteIpAddress = GetRemoteIpAddress(context);
         if (remoteIpAddress == null)
         {
-            _logger.LogWarning($"Request [{context.TraceIdentifier}] rejected, no remote IP address found.");
+            _logger.LogWarning("Request [{ContextTraceIdentifier}] rejected, no remote IP address found", context.TraceIdentifier);
             await RespondUnauthorized(context);
             return;
         }
 
         if (_blacklistManager.IsIpBlacklisted(remoteIpAddress))
         {
-            _logger.LogInformation($"Request [{context.TraceIdentifier}] rejected, IP address \"{remoteIpAddress}\" blacklisted.");
+            _logger.LogInformation("Request [{ContextTraceIdentifier}] rejected, IP address \\\"{RemoteIpAddress}\\\" blacklisted", context.TraceIdentifier, remoteIpAddress);
             await RespondUnauthorized(context);
             return;
         }
 
-        _logger.LogDebug($"Request [{context.TraceIdentifier}] from IP Address \"{remoteIpAddress}\".");
+        _logger.LogDebug("Request [{ContextTraceIdentifier}] from IP Address \\\"{RemoteIpAddress}\\\"", context.TraceIdentifier, remoteIpAddress);
 
         await next.Invoke(context);
 

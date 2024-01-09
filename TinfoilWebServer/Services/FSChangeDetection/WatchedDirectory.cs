@@ -33,7 +33,7 @@ public class WatchedDirectory : WatchedPathFiltered, IWatchedDirectory
     protected override void OnError(ErrorEventArgs e)
     {
         var ex = e.GetException();
-        _logger.LogError(ex, $"An error occurred while watching changes of directory \"{Directory.FullName}\": {ex.Message}");
+        _logger.LogError(ex, "An error occurred while watching changes of directory \\\"{DirectoryFullName}\\\": {ExMessage}", Directory.FullName, ex.Message);
     }
 
 

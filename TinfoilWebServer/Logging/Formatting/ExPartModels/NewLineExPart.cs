@@ -7,6 +7,6 @@ public class NewLineExPart : NewLineBasePart, IExPart
 {
     public string GetText(Exception ex)
     {
-        return base.NewLine;
+        return NewLine;
     }
 }

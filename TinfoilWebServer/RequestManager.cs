@@ -65,7 +65,7 @@ public class RequestManager : IRequestManager
             if (!await fingerprintValidator.Validate())
                 return;
 
-            _logger.LogInformation($"Request [{context.TraceIdentifier}] to index \"{(string.IsNullOrEmpty(virtualDirectory.Key) ? "ROOT" : virtualDirectory.Key)}\" allowed {logAuthInfo}.");
+            _logger.LogInformation("Request [{ContextTraceIdentifier}] to index \\\"{VirtualDirectoryKey}\\\" allowed {LogAuthInfo}", context.TraceIdentifier, (string.IsNullOrEmpty(virtualDirectory.Key) ? "ROOT" : virtualDirectory.Key), logAuthInfo);
 
             var tinfoilIndex = _tinfoilIndexBuilder.Build(virtualDirectory, authenticatedUser?.UserInfo);
 
@@ -78,7 +78,7 @@ public class RequestManager : IRequestManager
         }
         else if ((request.Method is "GET" or "HEAD") && virtualItem is VirtualFile virtualFile)
         {
-            _logger.LogInformation($"Request [{context.TraceIdentifier}] to file \"{virtualFile.Key}\" allowed {logAuthInfo}.");
+            _logger.LogInformation("Request [{ContextTraceIdentifier}] to file \\\"{VirtualFileKey}\\\" allowed {LogAuthInfo}", context.TraceIdentifier, virtualFile.Key, logAuthInfo);
 
             var rangeHeader = request.GetTypedHeaders().Range;
             context.Response.ContentType = "application/octet-stream";
@@ -87,7 +87,7 @@ public class RequestManager : IRequestManager
         }
         else
         {
-            _logger.LogInformation($"Request [{context.TraceIdentifier}] doesn't target any valid element {logAuthInfo}.");
+            _logger.LogInformation("Request [{ContextTraceIdentifier}] doesn\'t target any valid element {LogAuthInfo}", context.TraceIdentifier, logAuthInfo);
 
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
             await context.Response.CompleteAsync();

@@ -28,11 +28,11 @@ public class TinfoilIndexBuilder : ITinfoilIndexBuilder
     {
         if (e.PropertyName == nameof(IAppSettings.MessageOfTheDay))
         {
-            _logger.LogInformation("Message of the day updated.");
+            _logger.LogInformation("Message of the day updated");
         }
         else if (e.PropertyName == nameof(IAppSettings.CustomIndexPath))
         {
-            _logger.LogInformation("Custom index updated.");
+            _logger.LogInformation("Custom index updated");
         }
     }
 

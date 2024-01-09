@@ -76,7 +76,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to populate directory \"{subDirectory}\" to served files.");
+            _logger.LogError(ex, "Failed to populate directory \\\"{SubDirectory}\\\" to served files", subDirectory);
         }
     }
 
@@ -101,7 +101,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to populate file \"{subFile}\" to served files.");
+            _logger.LogError(ex, "Failed to populate file \\\"{SubFile}\\\" to served files", subFile);
         }
     }
 
@@ -121,7 +121,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to list files of \"{dir.FullName}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to list files of \\\"{ItemFullName}\\\": {ExMessage}", dir.FullName, ex.Message);
             }
 
             if (subFiles != null)
@@ -140,7 +140,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to list directories of \"{dir.FullName}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to list directories of \\\"{ItemFullName}\\\": {ExMessage}", dir.FullName, ex.Message);
             }
 
             if (subDirs != null)
@@ -174,7 +174,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to list directories of \"{virtualDir.Directory}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to list directories of \\\"{VirtualDirDirectory}\\\": {ExMessage}", virtualDir.Directory, ex.Message);
             }
 
             if (subDirectories != null)
@@ -194,7 +194,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to list files of \"{virtualDir.Directory}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to list files of \\\"{VirtualDirDirectory}\\\": {ExMessage}", virtualDir.Directory, ex.Message);
             }
 
             if (subFiles != null)
@@ -212,7 +212,7 @@ public class VirtualFileSystemBuilder : IVirtualFileSystemBuilder
             var removedDirectories = virtualFileSystemRoot.RemoveDirectoriesWithoutFile();
 
             if (_logger.IsEnabled(LogLevel.Debug) && removedDirectories.Count > 0)
-                _logger.LogDebug($"Empty served directories removed:{removedDirectories.Select(directory => directory.Directory!.FullName).ToMultilineString()}");
+                _logger.LogDebug("Empty served directories removed:{MultilineString}", removedDirectories.Select(directory => directory.Directory!.FullName).ToMultilineString());
         }
 
         return virtualFileSystemRoot;

@@ -109,7 +109,7 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
 
         if (servedDirectoryPaths == null || servedDirectoryPaths.Count <= 0)
         {
-            _logger.LogWarning($"No served directory defined in configuration file \"{_bootInfo.ConfigFileFullPath}\".");
+            _logger.LogWarning("No served directory defined in configuration file \\\"{BootInfoConfigFileFullPath}\\\"", _bootInfo.ConfigFileFullPath);
             return servedDirectories;
         }
 
@@ -119,7 +119,7 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
             {
                 if (string.IsNullOrWhiteSpace(servedDirectoryPath))
                 {
-                    _logger.LogError("Invalid configuration, served directory path can't be empty.");
+                    _logger.LogError("Invalid configuration, served directory path can't be empty");
                     continue;
                 }
 
@@ -127,19 +127,19 @@ public class AppSettings : NotifyPropertyChangedBase, IAppSettings
                 if (!servedDirectory.Exists)
                 {
                     servedDirectory.Create();
-                    _logger.LogInformation($"Served directory \"{servedDirectoryPath}\" created.");
+                    _logger.LogInformation("Served directory \\\"{ServedDirectoryPath}\\\" created", servedDirectoryPath);
                 }
 
                 servedDirectories.Add(servedDirectory);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while initializing served directory \"{servedDirectoryPath}\": {ex.Message}");
+                _logger.LogError(ex, "An error occurred while initializing served directory \\\"{ServedDirectoryPath}\\\": {ExMessage}", servedDirectoryPath, ex.Message);
             }
         }
 
         if (servedDirectories.Count <= 0)
-            _logger.LogWarning($"No valid served directory found in configuration file \"{_bootInfo.ConfigFileFullPath}\".");
+            _logger.LogWarning("No valid served directory found in configuration file \\\"{BootInfoConfigFileFullPath}\\\"", _bootInfo.ConfigFileFullPath);
 
         return servedDirectories;
     }

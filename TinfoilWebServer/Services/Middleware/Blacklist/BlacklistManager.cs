@@ -43,15 +43,15 @@ public class BlacklistManager : IBlacklistManager, IDisposable
         if (e.PropertyName == nameof(IBlacklistSettings.Enabled))
         {
             if (_blacklistSettings.Enabled)
-                _logger.LogInformation("Blacklist feature enabled.");
+                _logger.LogInformation("Blacklist feature enabled");
             else
-                _logger.LogWarning("Blacklist feature disabled.");
+                _logger.LogWarning("Blacklist feature disabled");
 
             SafeInitializeInternal(true);
         }
         else if (e.PropertyName == nameof(IBlacklistSettings.FilePath))
         {
-            _logger.LogInformation($"Blacklist file path changed to \"{_blacklistSettings.FilePath}\".");
+            _logger.LogInformation("Blacklist file path changed to \\\"{BlacklistSettingsFilePath}\\\"", _blacklistSettings.FilePath);
 
             SafeInitializeInternal(false);
         }
@@ -93,7 +93,7 @@ public class BlacklistManager : IBlacklistManager, IDisposable
 
             if (nbTries >= _blacklistSettings.MaxConsecutiveFailedAuth)
             {
-                _logger.LogWarning($"IP \"{ipAddress}\" has been blacklisted after {nbTries} attempts.");
+                _logger.LogWarning("IP \\\"{IpAddress}\\\" has been blacklisted after {NbTries} attempts", ipAddress, nbTries);
                 _blacklistedIps.Add(ipAddress);
                 _consecutiveUnauthorizedPerIp.Remove(ipAddress);
                 SafeSaveBlacklistedIps();
@@ -119,7 +119,7 @@ public class BlacklistManager : IBlacklistManager, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to save blacklisted IPs to \"{_blacklistFile}\": {ex.Message}");
+            _logger.LogError(ex, "Failed to save blacklisted IPs to \\\"{BlacklistFile}\\\": {ExMessage}", _blacklistFile, ex.Message);
         }
 
         if (_watchedFile != null)
@@ -164,26 +164,26 @@ public class BlacklistManager : IBlacklistManager, IDisposable
 
             if (string.IsNullOrWhiteSpace(blacklistFilePath))
             {
-                _logger.LogWarning($"IP blacklisting is enabled but blacklist file path is empty in configuration file \"{_bootInfo.ConfigFileFullPath}\", blacklisted IPs won't be saved.");
+                _logger.LogWarning("IP blacklisting is enabled but blacklist file path is empty in configuration file \\\"{BootInfoConfigFileFullPath}\\\", blacklisted IPs won\'t be saved", _bootInfo.ConfigFileFullPath);
                 return;
             }
 
             _blacklistFile = new FileInfo(blacklistFilePath);
 
             if (_blacklistFile.Directory == null)
-                throw new Exception($"The directory of blacklist file \"{_blacklistFile}\" can't be determined.");
+                throw new Exception($"The directory of blacklist file \"{_blacklistFile}\" can't be determined");
 
             var blacklistFileDir = _blacklistFile.Directory;
             blacklistFileDir.Refresh();
             if (!blacklistFileDir.Exists)
             {
                 _blacklistFile.Directory.Create();
-                _logger.LogInformation($"Blacklist directory \"{blacklistFileDir.FullName}\" created.");
+                _logger.LogInformation("Blacklist directory \\\"{FullName}\\\" created", blacklistFileDir.FullName);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to initialize blacklist file: {ex.Message}");
+            _logger.LogError(ex, "Failed to initialize blacklist file: {ExMessage}", ex.Message);
             _blacklistFile = null;
         }
     }
@@ -203,7 +203,7 @@ public class BlacklistManager : IBlacklistManager, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to watch changes of file \"{blacklistFullFilePath}\": {ex.Message}");
+            _logger.LogError(ex, "Failed to watch changes of file \\\"{BlacklistFullFilePath}\\\": {ExMessage}", blacklistFullFilePath, ex.Message);
             return;
         }
 
@@ -226,16 +226,16 @@ public class BlacklistManager : IBlacklistManager, IDisposable
                 {
                     _blacklistSerializer.Deserialize(_blacklistFile.FullName, _blacklistedIps);
 
-                    _logger.LogInformation($"{_blacklistedIps.Count} blacklisted IPs successfully loaded.");
+                    _logger.LogInformation("{BlacklistedIpsCount} blacklisted IPs successfully loaded", _blacklistedIps.Count);
                 }
                 else
                 {
-                    _logger.LogInformation($"Blacklist file \"{_blacklistFile.FullName}\" not found.");
+                    _logger.LogInformation("Blacklist file \\\"{BlacklistFileFullName}\\\" not found", _blacklistFile.FullName);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to load blacklisted IPs from file \"{_blacklistFile}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to load blacklisted IPs from file \\\"{BlacklistFile}\\\": {ExMessage}", _blacklistFile, ex.Message);
             }
         }
     }

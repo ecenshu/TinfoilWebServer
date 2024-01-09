@@ -56,11 +56,11 @@ public class VirtualFileSystemRootProvider : IVirtualFileSystemRootProvider
 
             var nbFilesServed = root.GetDescendantFiles().Count();
 
-            _logger.LogInformation($"Served files cache refreshed in {(DateTime.Now - dateTime).TotalSeconds:0.00}s, {nbFilesServed} file(s) served.");
+            _logger.LogInformation("Served files cache refreshed in {TotalSeconds}s, {NbFilesServed} file(s) served", (DateTime.Now - dateTime).TotalSeconds, nbFilesServed);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to refresh cache of served files: {ex.Message}");
+            _logger.LogError(ex, "Failed to refresh cache of served files: {ExMessage}", ex.Message);
         }
     }
 

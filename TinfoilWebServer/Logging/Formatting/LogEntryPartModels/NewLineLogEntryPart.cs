@@ -7,6 +7,6 @@ public class NewLineLogEntryPart : NewLineBasePart, ILogEntryPart
 {
     public  string GetText<TState>(LogEntry<TState> logEntry)
     {
-        return base.NewLine;
+        return NewLine;
     }
 }

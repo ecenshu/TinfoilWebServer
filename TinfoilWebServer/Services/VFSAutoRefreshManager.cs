@@ -104,7 +104,7 @@ public class VFSAutoRefreshManager : IVFSAutoRefreshManager
 
     private async void OnDirectoryChanged(object sender, DirectoryChangedEventHandlerArgs args)
     {
-        _logger.LogDebug($"Served files cache invoked from {this.GetType().Name}.");
+        _logger.LogDebug($"Served files cache invoked from {GetType().Name}.");
 
         await _virtualFileSystemRootProvider.SafeRefresh();
     }

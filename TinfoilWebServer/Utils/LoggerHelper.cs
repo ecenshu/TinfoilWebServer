@@ -24,7 +24,7 @@ public static class LoggerHelper
     public static void LogWelcomeMessage(this ILogger logger)
     {
         var version = Assembly.GetExecutingAssembly().GetName().Version!;
-        logger.LogInformation($"Welcome to Tinfoil Web Server v{version.Major}.{version.Minor}.{version.Build} (press CTRL+C to exit)");
+        logger.LogInformation("Welcome to Tinfoil Web Server v{VersionMajor}.{VersionMinor}.{VersionBuild} (press CTRL+C to exit)", version.Major, version.Minor, version.Build);
     }
 
     public static void LogBootInfo(this ILogger logger, IBootInfo bootInfo)
@@ -34,23 +34,18 @@ public static class LoggerHelper
 
         var configFilePath = bootInfo.ConfigFileFullPath;
         if (File.Exists(configFilePath))
-            logger.LogInformation($"Configuration file found at location \"{configFilePath}\".");
+            logger.LogInformation("Configuration file found at location \\\"{ConfigFilePath}\\\"", configFilePath);
         else
-            logger.LogWarning($"Configuration file not found at location \"{configFilePath}\".");
+            logger.LogWarning("Configuration file not found at location \\\"{ConfigFilePath}\\\"", configFilePath);
 
         if (bootInfo.Errors.Count > 0)
         {
             var errorsStr = string.Join(Environment.NewLine, bootInfo.Errors.Select(e => $"-> {e}"));
 
-            logger.LogError(
-                $"""
-                Some initialization errors occurred:
-                {errorsStr}
-                """
-                );
+            logger.LogError("$\"\"\"\n                Some initialization errors occurred:\n                {ErrorsStr}\n                \"\"\"", errorsStr);
         }
 
-        logger.LogInformation($"Current directory is \"{Environment.CurrentDirectory}\".");
+        logger.LogInformation("Current directory is \\\"{CurrentDirectory}\\\"", Environment.CurrentDirectory);
     }
 
     public static void LogRelevantSettings(this ILogger logger, IAppSettings appSettings)
@@ -97,18 +92,19 @@ public static class LoggerHelper
         sb.AppendLine($"{LogUtil.INDENT_SPACES}Maximum consecutive failed authentication(s): {blacklist.MaxConsecutiveFailedAuth}");
         sb.AppendLine($"{LogUtil.INDENT_SPACES}Is behind proxy: {blacklist.IsBehindProxy}");
 
+        // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
         logger.LogInformation(sb.ToString());
 
     }
 
     public static void LogCurrentMachineInfo(this ILogger logger)
     {
-        logger.LogInformation($"Current machine Host/IP:{GetCurrentComputerAddressesOrHosts().ToMultilineString()}");
+        logger.LogInformation("Current machine Host/IP:{MultilineString}", GetCurrentComputerAddressesOrHosts().ToMultilineString());
     }
 
-    public static void LogListenedHosts(this ILogger logger, IServerAddressesFeature serverAddressesFeature)
+    public static void LogListenedHosts(this ILogger logger, IServerAddressesFeature? serverAddressesFeature)
     {
-        logger.LogInformation($"Listened addresses:{serverAddressesFeature?.Addresses.ToMultilineString()}");
+        logger.LogInformation("Listened addresses:{MultilineString}", serverAddressesFeature?.Addresses.ToMultilineString());
     }
 
 

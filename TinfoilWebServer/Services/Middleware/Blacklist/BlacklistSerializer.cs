@@ -68,7 +68,7 @@ public class BlacklistSerializer : IBlacklistSerializer
                     if (IPAddress.TryParse(sanitizedLine, out var ipAddress))
                         ipAddresses.Add(ipAddress);
                     else if (logErrors)
-                        _logger.LogError($"Invalid IP address \"{sanitizedLine}\" found file in file \"{filePath}\".");
+                        _logger.LogError("Invalid IP address \\\"{SanitizedLine}\\\" found file in file \\\"{FilePath}\\\"", sanitizedLine, filePath);
                 }
 
                 return;

@@ -41,20 +41,20 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
         if (e.PropertyName == nameof(IFingerprintsFilterSettings.Enabled))
         {
             if (_fingerprintsFilterSettings.Enabled)
-                _logger.LogInformation("Fingerprints filtering feature enabled.");
+                _logger.LogInformation("Fingerprints filtering feature enabled");
             else
-                _logger.LogWarning("Fingerprints filtering feature disabled.");
+                _logger.LogWarning("Fingerprints filtering feature disabled");
 
             Initialize();
         }
         else if (e.PropertyName == nameof(IFingerprintsFilterSettings.FingerprintsFilePath))
         {
-            _logger.LogInformation("Fingerprints file path changed, reloading fingerprints.");
+            _logger.LogInformation("Fingerprints file path changed, reloading fingerprints");
             Initialize();
         }       
         else if (e.PropertyName == nameof(IFingerprintsFilterSettings.MaxFingerprints))
         {
-            _logger.LogInformation($"Max global allowed fingerprints updated to {_fingerprintsFilterSettings.MaxFingerprints}.");
+            _logger.LogInformation("Max global allowed fingerprints updated to {MaxFingerprints}", _fingerprintsFilterSettings.MaxFingerprints);
             CheckSettingsConsistency();
         }
     }
@@ -83,7 +83,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
         if (_fingerprintsFilterSettings is { Enabled: true, MaxFingerprints: <= 0 } &&
             _authenticationSettings.Users.All(user => user.MaxFingerprints <= 0))
         {
-            _logger.LogWarning("Inconsistent configuration: fingerprints filtering is enabled but the number of allowed fingerprints is 0.");
+            _logger.LogWarning("Inconsistent configuration: fingerprints filtering is enabled but the number of allowed fingerprints is 0");
         }
     }
 
@@ -101,7 +101,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
 
                 if (fingerprint == null)
                 {
-                    _logger.LogWarning($"Request [{traceId}] from authenticated user \"{userInfo.Name}\" received without fingerprint, request rejected.");
+                    _logger.LogWarning("Request [{TraceId}] from authenticated user \\\"{UserInfoName}\\\" received without fingerprint, request rejected", traceId, userInfo.Name);
                     return false;
                 }
 
@@ -114,7 +114,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
                 if (allowedUserFingerprints.Contains(fingerprint))
                 {
                     // Fingerprint allowed
-                    _logger.LogDebug($"Request [{traceId}] from authenticated user \"{userInfo.Name}\" passed fingerprint validation.");
+                    _logger.LogDebug("Request [{TraceId}] from authenticated user \\\"{UserInfoName}\\\" passed fingerprint validation", traceId, userInfo.Name);
                     return true;
                 }
 
@@ -122,7 +122,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
                 if (allowedGlobalFingerprints.Contains(fingerprint))
                 {
                     // Fingerprint allowed
-                    _logger.LogDebug($"Request [{traceId}] from authenticated user \"{userInfo.Name}\" passed global fingerprint validation.");
+                    _logger.LogDebug("Request [{TraceId}] from authenticated user \\\"{UserInfoName}\\\" passed global fingerprint validation", traceId, userInfo.Name);
                     return true;
                 }
 
@@ -135,12 +135,12 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
 
                     SafeSaveFingerprintsToFileAsync();
 
-                    _logger.LogInformation($"New fingerprint \"{fingerprint}\" added to user \"{userInfo.Name}\" ({allowedUserFingerprints.Count}/{maxUserFingerprints}).");
+                    _logger.LogInformation("New fingerprint \\\"{Fingerprint}\\\" added to user \\\"{UserInfoName}\\\" ({ValueCount}/{MaxUserFingerprints})", fingerprint, userInfo.Name, allowedUserFingerprints.Count, maxUserFingerprints);
                     return true;
                 }
 
                 // No more fingerprint allowed
-                _logger.LogWarning($"Request [{traceId}] rejected, fingerprint of user \"{userInfo.Name}\" couldn't be added, maximum reached ({allowedUserFingerprints.Count}/{maxUserFingerprints}).");
+                _logger.LogWarning("Request [{TraceId}] rejected, fingerprint of user \\\"{UserInfoName}\\\" couldn\'t be added, maximum reached ({ValueCount}/{MaxUserFingerprints})", traceId, userInfo.Name, allowedUserFingerprints.Count, maxUserFingerprints);
                 return false;
 
             }
@@ -151,7 +151,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
                 if (fingerprint == null)
                 {
                     // Fingerprint undefined
-                    _logger.LogWarning($"Request [{traceId}] received without fingerprint, request rejected.");
+                    _logger.LogWarning("Request [{TraceId}] received without fingerprint, request rejected", traceId);
                     return false;
                 }
 
@@ -159,7 +159,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
                 if (allowedGlobalFingerprints.Contains(fingerprint))
                 {
                     // Fingerprint allowed
-                    _logger.LogDebug($"Request [{traceId}] passed global fingerprint validation.");
+                    _logger.LogDebug("Request [{TraceId}] passed global fingerprint validation", traceId);
                     return true;
                 }
 
@@ -171,12 +171,12 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
 
                     SafeSaveFingerprintsToFileAsync();
 
-                    _logger.LogInformation($"New global fingerprint \"{fingerprint}\" added ({allowedGlobalFingerprints.Count}/{maxAllowedFingerprints}).");
+                    _logger.LogInformation("New global fingerprint \\\"{Fingerprint}\\\" added ({Count}/{MaxAllowedFingerprints})", fingerprint, allowedGlobalFingerprints.Count, maxAllowedFingerprints);
                     return true;
                 }
 
                 // No more fingerprint allowed
-                _logger.LogWarning($"Request [{traceId}] rejected, global fingerprint \"{fingerprint}\" couldn't be added, maximum reached ({allowedGlobalFingerprints.Count}/{maxAllowedFingerprints}).");
+                _logger.LogWarning("Request [{TraceId}] rejected, global fingerprint \\\"{Fingerprint}\\\" couldn\'t be added, maximum reached ({Count}/{MaxAllowedFingerprints})", traceId, fingerprint, allowedGlobalFingerprints.Count, maxAllowedFingerprints);
                 return false;
             }
         }
@@ -209,7 +209,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to save fingerprints file to \"{_fingerprintsFile.FullName}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to save fingerprints file to \\\"{FingerprintsFileFullName}\\\": {ExMessage}", _fingerprintsFile.FullName, ex.Message);
             }
         });
     }
@@ -234,13 +234,13 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to load fingerprints from file \"{_fingerprintsFile.FullName}\": {ex.Message}");
+            _logger.LogError(ex, "Failed to load fingerprints from file \\\"{FingerprintsFileFullName}\\\": {ExMessage}", _fingerprintsFile.FullName, ex.Message);
         }
     }
 
 
     /// <summary>
-    /// Intialize members <see cref="_fingerprintsWatchedFile"/> and <see cref="_fingerprintsFile"/>
+    /// Initialize members <see cref="_fingerprintsWatchedFile"/> and <see cref="_fingerprintsFile"/>
     /// and starts watching fingerprints file changes
     /// </summary>
     private void SafeInitializeFingerprintsFile()
@@ -262,27 +262,27 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
 
             if (string.IsNullOrWhiteSpace(filePath))
             {
-                _logger.LogWarning($"Fingerprints filtering is enabled but file path is empty in configuration file \"{_bootInfo.ConfigFileFullPath}\", fingerprints won't be saved.");
+                _logger.LogWarning("Fingerprints filtering is enabled but file path is empty in configuration file \\\"{BootInfoConfigFileFullPath}\\\", fingerprints won\'t be saved", _bootInfo.ConfigFileFullPath);
                 return;
             }
 
             _fingerprintsFile = new FileInfo(filePath);
 
             if (_fingerprintsFile.Directory == null)
-                throw new Exception($"The directory of fingerprints file \"{_fingerprintsFile}\" can't be determined.");
+                throw new Exception($"The directory of fingerprints file \"{_fingerprintsFile}\" can't be determined");
 
             var fingerprintsFileDirectory = _fingerprintsFile.Directory;
             fingerprintsFileDirectory.Refresh();
             if (!fingerprintsFileDirectory.Exists)
             {
                 _fingerprintsFile.Directory.Create();
-                _logger.LogInformation($"Fingerprints directory \"{fingerprintsFileDirectory.FullName}\" created.");
+                _logger.LogInformation("Fingerprints directory \\\"{FullName}\\\" created", fingerprintsFileDirectory.FullName);
             }
 
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to initialize fingerprints file: {ex.Message}");
+            _logger.LogError(ex, "Failed to initialize fingerprints file: {ExMessage}", ex.Message);
             _fingerprintsFile = null;
             return;
         }
@@ -293,7 +293,7 @@ public class FingerprintsFilteringManager : IFingerprintsFilteringManager
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to watch changes of file \"{_fingerprintsFile.FullName}\": {ex.Message}");
+            _logger.LogError(ex, "Failed to watch changes of file \\\"{FingerprintsFileFullName}\\\": {ExMessage}", _fingerprintsFile.FullName, ex.Message);
             return;
         }
         _fingerprintsWatchedFile.FileChanged += OnFingerprintsFileChanged;

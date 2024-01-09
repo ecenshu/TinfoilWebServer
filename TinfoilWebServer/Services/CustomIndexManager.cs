@@ -52,7 +52,7 @@ public class CustomIndexManager : ICustomIndexManager
                 customIndexFile.Refresh();
                 if (!customIndexFile.Exists)
                 {
-                    _logger.LogError($"Custom index file \"{customIndexFile}\" not found.");
+                    _logger.LogError("Custom index file \\\"{CustomIndexFile}\\\" not found", customIndexFile);
                     CustomIndex = null;
                     return;
                 }
@@ -61,17 +61,17 @@ public class CustomIndexManager : ICustomIndexManager
 
                 if (JsonNode.Parse(fileStream) is not JsonObject jsonObject)
                 {
-                    _logger.LogError($"Custom index file \"{customIndexFile}\" is not a valid JSON object.");
+                    _logger.LogError("Custom index file \\\"{CustomIndexFile}\\\" is not a valid JSON object", customIndexFile);
                 }
                 else
                 {
-                    _logger.LogInformation($"Custom index file \"{customIndexFile}\" successfully loaded.");
+                    _logger.LogInformation("Custom index file \\\"{CustomIndexFile}\\\" successfully loaded", customIndexFile);
                     CustomIndex = jsonObject;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to load custom index from file \"{customIndexFile}\": {ex.Message}");
+                _logger.LogError(ex, "Failed to load custom index from file \\\"{CustomIndexFile}\\\": {ExMessage}", customIndexFile, ex.Message);
             }
         }
 
@@ -140,7 +140,7 @@ public class CustomIndexManager : ICustomIndexManager
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Failed to watch changes of custom index file \"{newCustomIndexFile}\": {ex.Message}");
+                    _logger.LogError(ex, "Failed to watch changes of custom index file \\\"{NewCustomIndexFile}\\\": {ExMessage}", newCustomIndexFile, ex.Message);
                 }
 
                 var cachedData = new CachedData(newCustomIndexFile, watchedFile, _logger);
@@ -159,7 +159,7 @@ public class CustomIndexManager : ICustomIndexManager
                 // Custom index path is not anymore referenced and can be removed from cache
                 _cachedDataPerPath[cachedCustomIndexPath].Dispose();
                 _cachedDataPerPath.Remove(cachedCustomIndexPath);
-                _logger.LogInformation($"Custom index file \"{cachedCustomIndexPath}\" unloaded.");
+                _logger.LogInformation("Custom index file \\\"{CachedCustomIndexPath}\\\" unloaded", cachedCustomIndexPath);
             }
         }
     }

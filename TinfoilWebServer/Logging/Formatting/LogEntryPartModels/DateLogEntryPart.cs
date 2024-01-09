@@ -7,6 +7,6 @@ public class DateLogEntryPart : DateBasePart, ILogEntryPart
 {
     public string GetText<TState>(LogEntry<TState> logEntry)
     {
-        return base.GetDateString();
+        return GetDateString();
     }
 }

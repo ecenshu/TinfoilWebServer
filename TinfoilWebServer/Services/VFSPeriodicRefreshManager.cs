@@ -42,7 +42,7 @@ public class VFSPeriodicRefreshManager : IVFSPeriodicRefreshManager, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to start periodic refresh of served files cache with value {delay}: {ex.Message}");
+            _logger.LogError(ex, "Failed to start periodic refresh of served files cache with value {Delay}: {ExMessage}", delay, ex.Message);
         }
     }
 
@@ -54,7 +54,7 @@ public class VFSPeriodicRefreshManager : IVFSPeriodicRefreshManager, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to stop periodic refresh served files cache: {ex.Message}");
+            _logger.LogError(ex, "Failed to stop periodic refresh served files cache: {ExMessage}", ex.Message);
         }
     }
 
@@ -65,12 +65,12 @@ public class VFSPeriodicRefreshManager : IVFSPeriodicRefreshManager, IDisposable
             var periodicRefreshDelay = _cacheSettings.PeriodicRefreshDelay;
             if (periodicRefreshDelay == null)
             {
-                _logger.LogInformation("Disabling periodic refresh of served files cache.");
+                _logger.LogInformation("Disabling periodic refresh of served files cache");
                 SafeDisable();
             }
             else
             {
-                _logger.LogInformation($"Enabling periodic refresh of served files cache every {periodicRefreshDelay.Value}.");
+                _logger.LogInformation("Enabling periodic refresh of served files cache every {PeriodicRefreshDelay}", periodicRefreshDelay.Value);
                 SafeEnable(periodicRefreshDelay.Value);
             }
         }
@@ -78,7 +78,7 @@ public class VFSPeriodicRefreshManager : IVFSPeriodicRefreshManager, IDisposable
 
     private async void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        _logger.LogDebug($"Served files cache invoked from {this.GetType().Name}.");
+        _logger.LogDebug("Served files cache invoked from {Name}", GetType().Name);
 
         await _virtualFileSystemRootProvider.SafeRefresh();
         try
@@ -87,7 +87,7 @@ public class VFSPeriodicRefreshManager : IVFSPeriodicRefreshManager, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Failed to rearm periodic refresh of served files cache: {ex.Message}");
+            _logger.LogError(ex, "Failed to rearm periodic refresh of served files cache: {ExMessage}", ex.Message);
         }
     }
 

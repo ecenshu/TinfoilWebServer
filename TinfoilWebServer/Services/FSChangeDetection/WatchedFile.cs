@@ -37,7 +37,7 @@ public class WatchedFile : WatchedPathFiltered, IWatchedFile
     protected override void OnError(ErrorEventArgs e)
     {
         var ex = e.GetException();
-        _logger.LogError(ex, $"An error occurred while watching changes of file \"{File}\": {ex.Message}");
+        _logger.LogError(ex, "An error occurred while watching changes of file \\\"{File}\\\": {ExMessage}", File, ex.Message);
     }
 
     protected override void OnChange(FileSystemEventArgs e)

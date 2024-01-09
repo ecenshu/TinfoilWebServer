@@ -130,7 +130,7 @@ public class Program
             AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
             {
                 var ex = eventArgs.ExceptionObject as Exception;
-                logger.LogError(ex, $"An unhandled exception occurred: {ex?.Message ?? eventArgs.ExceptionObject}");
+                logger.LogError(ex, "An unhandled exception occurred: {EventArgsExceptionObject}", ex?.Message ?? eventArgs.ExceptionObject);
             };
 
             //===========================//
@@ -142,14 +142,14 @@ public class Program
             //===> Starts the server <===//
             //===========================//
 
-            logger.LogInformation("Server closing.");
+            logger.LogInformation("Server closing");
 
             return 0;
         }
         catch (Exception ex)
         {
             if (logger != null)
-                logger.LogError(ex, $"An unexpected error occurred: {ex.Message}");
+                logger.LogError(ex, "An unexpected error occurred: {ExMessage}", ex.Message);
             else
                 Console.Error.WriteLine(
                      $"""
